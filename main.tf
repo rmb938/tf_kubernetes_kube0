@@ -4,3 +4,7 @@ terraform {
     credentials = "secrets/decrypted/terraform-state-sa.json"
   }
 }
+
+module "namespaces" {
+  source = "./namespaces"
+}
