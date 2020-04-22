@@ -1,6 +1,7 @@
 resource "kubernetes_limit_range" "default" {
   metadata {
-    name = "default"
+    name      = "default"
+    namespace = kubernetes_namespace.namespace.metadata[0].name
   }
 
   spec {

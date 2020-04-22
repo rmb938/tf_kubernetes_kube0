@@ -1,6 +1,7 @@
 resource "kubernetes_resource_quota" "default" {
   metadata {
-    name = "default"
+    name      = "default"
+    namespace = kubernetes_namespace.namespace.metadata[0].name
   }
 
   spec {
