@@ -1,11 +1,11 @@
-name: Terraform Apply
+name: Terraform Plan
 
 on:
   - pull_request
 
 jobs:
-  apply:
-    name: Terraform Apply
+  plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
