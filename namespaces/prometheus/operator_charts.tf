@@ -1,13 +1,3 @@
-module "prometheus-namespace" {
-  source = "../modules/namespace"
-  name   = "prometheus"
-}
-
-data "helm_repository" "personal" {
-  name = "personal"
-  url  = "http://charts.rmb938.com"
-}
-
 resource "helm_release" "prometheus-operator-crd" {
   name      = "prometheus-operator-crd"
   namespace = module.prometheus-namespace.namespace_name
@@ -18,9 +8,6 @@ resource "helm_release" "prometheus-operator-crd" {
 
   max_history = 10
 
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "helm_release" "prometheus-operator" {
@@ -29,11 +16,47 @@ resource "helm_release" "prometheus-operator" {
 
   repository = data.helm_repository.personal.metadata[0].name
   chart      = "prometheus-operator"
-  version    = "0.1.0"
+  version    = "0.1.2"
 
   max_history = 10
 
   depends_on = [
     helm_release.prometheus-operator-crd
   ]
+
+  set {
+    name  = "image.repository"
+    value = ""
+  }
+
+  set {
+    name  = "prometheusConfigReloader.image.repository"
+    value = ""
+  }
+
+  set {
+    name  = "serviceAccount.create"
+    value = "false"
+  }
+
+  set {
+    name  = "serviceAccount.name"
+    value = kubernetes_service_account.prometheus-operator.metadata[0].name
+  }
+
+  set {
+    name  = "rbac.create"
+    value = "false"
+  }
+
+  set {
+    name  = "serviceMonitor.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "nodeSelector.kubernetes\\.io/arch"
+    value = "arm"
+  }
+
 }
