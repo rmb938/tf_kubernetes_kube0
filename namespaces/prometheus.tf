@@ -10,7 +10,7 @@ data "helm_repository" "personal" {
 
 resource "helm_release" "prometheus-operator-crde" {
   name      = "prometheus-operator-crd"
-  namespace = module.prometheus-namespace.name
+  namespace = module.prometheus-namespace.namespace_name
 
   repository = data.helm_repository.personal.metadata[0].name
   chart      = "prometheus-operator-crd"
