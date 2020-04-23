@@ -29,7 +29,7 @@ resource "helm_release" "prometheus-operator" {
 
   repository = data.helm_repository.personal.metadata[0].name
   chart      = "prometheus-operator"
-  version    = "0.1.1"
+  version    = "0.1.0"
 
   max_history = 10
 
