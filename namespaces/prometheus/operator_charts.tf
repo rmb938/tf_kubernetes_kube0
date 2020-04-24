@@ -21,7 +21,8 @@ resource "helm_release" "prometheus-operator" {
   max_history = 10
 
   depends_on = [
-    helm_release.prometheus-operator-crd
+    helm_release.prometheus-operator-crd,
+    kubernetes_cluster_role_binding.prometheus-operator
   ]
 
   set {
