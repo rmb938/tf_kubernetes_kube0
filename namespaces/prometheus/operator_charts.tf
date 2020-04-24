@@ -26,12 +26,12 @@ resource "helm_release" "prometheus-operator" {
 
   set {
     name  = "image.repository"
-    value = ""
+    value = "docker.io/rmb938/prometheus-operator-multi-arch"
   }
 
   set {
     name  = "prometheusConfigReloader.image.repository"
-    value = ""
+    value = "docker.io/rmb938/prometheus-config-reloader-multi-arch"
   }
 
   set {
