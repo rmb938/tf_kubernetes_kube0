@@ -1,6 +1,7 @@
 resource "kubernetes_service_account" "prometheus" {
   metadata {
-    name = "prometheus"
+    name      = "prometheus"
+    namespace = module.prometheus-namespace.namespace_name
   }
 
   automount_service_account_token = true

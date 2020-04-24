@@ -1,6 +1,7 @@
 resource "kubernetes_service_account" "prometheus-operator" {
   metadata {
-    name = "prometheus-operator"
+    name      = "prometheus-operator"
+    namespace = module.prometheus-namespace.namespace_name
   }
 
   automount_service_account_token = true
