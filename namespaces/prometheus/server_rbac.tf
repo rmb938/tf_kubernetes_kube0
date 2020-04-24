@@ -1,6 +1,7 @@
 resource "kubernetes_service_account" "prometheus" {
   metadata {
-    name = "prometheus"
+    name      = "prometheus"
+    namespace = module.prometheus-namespace.namespace_name
   }
 
   automount_service_account_token = true
@@ -25,6 +26,11 @@ resource "kubernetes_cluster_role_binding" "prometheus" {
     name      = kubernetes_service_account.prometheus.metadata[0].name
     namespace = module.prometheus-namespace.namespace_name
   }
+
+  depends_on = [
+    kubernetes_service_account.prometheus,
+    kubernetes_cluster_role.prometheus
+  ]
 }
 
 resource "kubernetes_cluster_role" "prometheus" {
