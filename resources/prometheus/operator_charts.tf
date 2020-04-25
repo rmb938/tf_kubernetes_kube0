@@ -1,6 +1,6 @@
 resource "helm_release" "prometheus-operator-crd" {
   name      = "prometheus-operator-crd"
-  namespace = module.prometheus-namespace.namespace_name
+  namespace = var.namespace
 
   repository = data.helm_repository.personal.metadata[0].name
   chart      = "prometheus-operator-crd"
@@ -12,11 +12,11 @@ resource "helm_release" "prometheus-operator-crd" {
 
 resource "helm_release" "prometheus-operator" {
   name      = "prometheus-operator"
-  namespace = module.prometheus-namespace.namespace_name
+  namespace = var.namespace
 
   repository = data.helm_repository.personal.metadata[0].name
   chart      = "prometheus-operator"
-  version    = "0.1.3"
+  version    = "0.1.4"
 
   max_history = 10
 
@@ -61,3 +61,5 @@ resource "helm_release" "prometheus-operator" {
   }
 
 }
+
+// TODO: prometheus-operator-webhooks (depends on operator and var.cert-manager-crd)

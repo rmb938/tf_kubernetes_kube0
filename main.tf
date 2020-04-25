@@ -5,6 +5,6 @@ terraform {
   }
 }
 
-module "namespaces" {
-  source = "./namespaces"
+module "resources" {
+  source = "./resources"
 }
