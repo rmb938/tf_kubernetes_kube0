@@ -1,3 +1,3 @@
-output "cert-manager-crd" {
-  value = helm_release.cert-manager-crd
+output "cert-manager" {
+  value = helm_release.cert-manager
 }

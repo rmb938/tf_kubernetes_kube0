@@ -16,11 +16,12 @@ resource "helm_release" "prometheus-operator" {
 
   repository = data.helm_repository.personal.metadata[0].name
   chart      = "prometheus-operator"
-  version    = "0.1.4"
+  version    = "0.1.5"
 
   max_history = 10
 
   depends_on = [
+    # var.cert-manager, # TODO: this
     helm_release.prometheus-operator-crd,
     kubernetes_cluster_role_binding.prometheus-operator
   ]
@@ -60,6 +61,25 @@ resource "helm_release" "prometheus-operator" {
     value = "arm64"
   }
 
-}
+  # TODO: once cert-manager is setup
+  # set {
+  #   name = "webhook.enabled"
+  #   value = "true"
+  # }
 
-// TODO: prometheus-operator-webhooks (depends on operator and var.cert-manager-crd)
+  # set {
+  #   name  = "webhook.certificate.issuerRef.name"
+  #   value = "something"
+  # }
+
+  # set {
+  #   name  = "webhook.certificate.issuerRef.kind"
+  #   value = "something"
+  # }
+
+  # set {
+  #   name  = "webhook.certificate.issuerRef.group"
+  #   value = "something"
+  # }
+
+}

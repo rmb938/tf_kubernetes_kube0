@@ -4,7 +4,8 @@ module "prometheus-namespace" {
 }
 
 module "prometheus" {
-  source           = "./prometheus"
-  namespace        = module.prometheus-namespace.namespace_name
-  cert-manager-crd = module.cert-manager.cert-manager-crd
+  source    = "./prometheus"
+  namespace = module.prometheus-namespace.namespace_name
+  # cert-manager = module.cert-manager.cert-manager # TODO: this
+  cert-manager = ""
 }

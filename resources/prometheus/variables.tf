@@ -2,6 +2,6 @@ variable "namespace" {
   type = string
 }
 
-variable "cert-manager-crd" {
+variable "cert-manager" {
 
 }

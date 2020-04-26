@@ -29,7 +29,6 @@ resource "helm_release" "cert-manager" {
 
   max_history = 10
 
-  # TODO: depend on crds
   depends_on = [
     var.prometheus-crd,
     helm_release.cert-manager-crd
@@ -46,13 +45,18 @@ resource "helm_release" "cert-manager" {
   }
 
   set {
+    name  = "extraArgs"
+    value = "{--cluster-resource-namespace=${var.namespace},--enable-certificate-owner-ref=true}"
+  }
+
+  set {
     name  = "serviceAccount.create"
     value = "false"
   }
 
   set {
     name  = "serviceAccount.name"
-    value = "" # TODO: this
+    value = kubernetes_service_account.cert-manager.metadata[0].name
   }
 
   set {
@@ -77,11 +81,11 @@ resource "helm_release" "cert-manager" {
 
   set {
     name  = "webhook.serviceAccount.name"
-    value = "" # TODO: this
+    value = kubernetes_service_account.cert-manager-webhook.metadata[0].name
   }
 
   set {
-    name  = "webhook.nodeSelector.kubernetes\\.io/arc"
+    name  = "webhook.nodeSelector.kubernetes\\.io/arch"
     value = "arm64"
   }
 
@@ -92,11 +96,11 @@ resource "helm_release" "cert-manager" {
 
   set {
     name  = "cainjector.serviceAccount.name"
-    value = "" # TODO: this
+    value = kubernetes_service_account.cert-manager-cainjector.metadata[0].name
   }
 
   set {
-    name  = "cainjector.nodeSelector.kubernetes\\.io/arc"
+    name  = "cainjector.nodeSelector.kubernetes\\.io/arch"
     value = "arm64"
   }
 

@@ -26,11 +26,6 @@ resource "kubernetes_cluster_role_binding" "prometheus-operator" {
     name      = kubernetes_service_account.prometheus-operator.metadata[0].name
     namespace = var.namespace
   }
-
-  depends_on = [
-    kubernetes_service_account.prometheus-operator,
-    kubernetes_cluster_role.prometheus-operator
-  ]
 }
 
 resource "kubernetes_cluster_role" "prometheus-operator" {
