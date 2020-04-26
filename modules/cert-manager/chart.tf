@@ -3,6 +3,22 @@ data "helm_repository" "jetstack" {
   url  = "https://charts.jetstack.io"
 }
 
+data "helm_repository" "personal" {
+  name = "personal"
+  url  = "http://charts.rmb938.com"
+}
+
+resource "helm_release" "cert-manager-crd" {
+  name      = "cert-manager-crd"
+  namespace = var.namespace
+
+  repository = data.helm_repository.personal.metadata[0].name
+  chart      = "cert-manager-crd"
+  version    = "0.1.0"
+
+  max_history = 10
+}
+
 resource "helm_release" "cert-manager" {
   name      = "cert-manager"
   namespace = var.namespace
@@ -16,6 +32,7 @@ resource "helm_release" "cert-manager" {
   # TODO: depend on crds
   depends_on = [
     var.prometheus-crd,
+    helm_release.cert-manager-crd
   ]
 
   set {
