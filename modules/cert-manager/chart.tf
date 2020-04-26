@@ -57,7 +57,7 @@ resource "helm_release" "cert-manager" {
 
   set {
     name  = "nodeSelector.kubernetes\\.io/arch"
-    value = "arm"
+    value = "arm64"
   }
 
   set {
@@ -82,7 +82,7 @@ resource "helm_release" "cert-manager" {
 
   set {
     name  = "webhook.nodeSelector.kubernetes\\.io/arc"
-    value = "arm"
+    value = "arm64"
   }
 
   set {
@@ -97,7 +97,7 @@ resource "helm_release" "cert-manager" {
 
   set {
     name  = "cainjector.nodeSelector.kubernetes\\.io/arc"
-    value = "arm"
+    value = "arm64"
   }
 
 }

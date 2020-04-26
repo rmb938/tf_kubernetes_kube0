@@ -57,7 +57,7 @@ resource "helm_release" "prometheus-operator" {
 
   set {
     name  = "nodeSelector.kubernetes\\.io/arch"
-    value = "arm"
+    value = "arm64"
   }
 
 }
