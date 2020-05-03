@@ -22,7 +22,7 @@ resource "kubernetes_role" "cert-manager-webhook-dynamic-serving" {
   rule {
     api_groups     = [""]
     resources      = ["secrets"]
-    resource_names = ["cert-manager-webhook-ca"] # TODO: is this name correct?
+    resource_names = ["cert-manager-webhook-ca"]
     verbs          = ["get", "list", "watch", "update"]
   }
 

@@ -22,7 +22,7 @@ resource "kubernetes_role" "cert-manager-leader-election" {
     api_groups     = [""]
     resources      = ["configmaps"]
     resource_names = ["cert-manager-controller"]
-    verbs          = ["get", "create", "update", "patch"]
+    verbs          = ["get", "update", "patch"]
   }
 
   rule {

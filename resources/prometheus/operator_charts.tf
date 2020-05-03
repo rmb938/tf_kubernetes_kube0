@@ -6,7 +6,7 @@ resource "helm_release" "prometheus-operator-crd" {
   chart      = "prometheus-operator-crd"
   version    = "0.1.1"
 
-  max_history = 10
+  max_history = 5
 
 }
 
@@ -16,14 +16,13 @@ resource "helm_release" "prometheus-operator" {
 
   repository = data.helm_repository.personal.metadata[0].name
   chart      = "prometheus-operator"
-  version    = "0.1.5"
+  version    = "0.1.11"
 
-  max_history = 10
+  max_history = 5
 
   depends_on = [
-    # var.cert-manager, # TODO: this
-    helm_release.prometheus-operator-crd,
-    kubernetes_cluster_role_binding.prometheus-operator
+    var.cert-manager,
+    helm_release.prometheus-operator-crd
   ]
 
   set {
@@ -61,9 +60,14 @@ resource "helm_release" "prometheus-operator" {
     value = "arm64"
   }
 
-  # TODO: once cert-manager is setup
+  set {
+    name  = "kubeletService.namespace"
+    value = var.system-monitoring-namespace
+  }
+
+  # TODO: waiting for a prom operator release that has these flags
   # set {
-  #   name = "webhook.enabled"
+  #   name  = "webhook.enabled"
   #   value = "true"
   # }
 
