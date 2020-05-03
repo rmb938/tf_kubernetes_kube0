@@ -1,3 +1,113 @@
+// allow anything to ingress to nginx ingress
+resource "kubernetes_network_policy" "allow-any-ingress-nginx" {
+  metadata {
+    name      = "allow-any-ingress-nginx"
+    namespace = var.namespace
+  }
+
+  spec {
+    pod_selector {
+      match_labels = {
+        "app.kubernetes.io/name" : "ingress-nginx"
+        "app.kubernetes.io/instance" : "ingress-nginx"
+        "app.kubernetes.io/component" : "controller"
+      }
+    }
+
+    ingress {
+      ports {
+        port     = "http"
+        protocol = "TCP"
+      }
+      ports {
+        port     = "https"
+        protocol = "TCP"
+      }
+
+      from {
+        ip_block {
+          cidr = "0.0.0.0/0"
+        }
+      }
+    }
+
+    policy_types = ["Ingress"]
+  }
+}
+
+// allow nginx to ingress to defaultbackend
+resource "kubernetes_network_policy" "allow-nginx-ingress-to-defaultbackend" {
+  metadata {
+    name      = "allow-nginx-ingress-to-defaultbackend"
+    namespace = var.namespace
+  }
+
+  spec {
+    pod_selector {
+      match_labels = {
+        "app.kubernetes.io/name" : "ingress-nginx"
+        "app.kubernetes.io/instance" : "ingress-nginx"
+        "app.kubernetes.io/component" : "default-backend"
+      }
+    }
+
+    ingress {
+      ports {
+        port     = "http"
+        protocol = "TCP"
+      }
+
+      from {
+        pod_selector {
+          match_labels = {
+            "app.kubernetes.io/name" : "ingress-nginx"
+            "app.kubernetes.io/instance" : "ingress-nginx"
+            "app.kubernetes.io/component" : "controller"
+          }
+        }
+      }
+    }
+
+    policy_types = ["Ingress"]
+  }
+}
+
+// allow anything in prometheus namespace to scrape nginx metrics
+resource "kubernetes_network_policy" "allow-prometheus-ingress" {
+  metadata {
+    name      = "allow-prometheus-ingress"
+    namespace = var.namespace
+  }
+
+  spec {
+    pod_selector {
+      match_labels = {
+        "app.kubernetes.io/name" : "ingress-nginx"
+        "app.kubernetes.io/instance" : "ingress-nginx"
+        "app.kubernetes.io/component" : "controller"
+      }
+    }
+
+    ingress {
+      ports {
+        port     = "metrics"
+        protocol = "TCP"
+      }
+
+      from {
+        pod_selector {}
+        namespace_selector {
+          match_labels = {
+            "name" : "prometheus"
+          }
+        }
+      }
+    }
+
+    policy_types = ["Ingress"]
+  }
+}
+
 resource "helm_release" "ingress-nginx" {
   name      = "ingress-nginx"
   namespace = var.namespace
@@ -10,7 +120,11 @@ resource "helm_release" "ingress-nginx" {
 
   depends_on = [
     var.cert-manager,
-    var.prometheus-operator
+    var.prometheus-operator,
+    kubernetes_network_policy.allow-any-ingress-nginx,
+    kubernetes_network_policy.allow-any-ingress-nginx,
+    kubernetes_network_policy.allow-nginx-ingress-to-defaultbackend,
+    kubernetes_network_policy.allow-prometheus-ingress
   ]
 
   set_string {
@@ -44,8 +158,28 @@ resource "helm_release" "ingress-nginx" {
   }
 
   set {
-    name  = "controller.service.enabled"
-    value = "false"
+    name  = "controller.resources.requests.cpu"
+    value = "400m"
+  }
+
+  set {
+    name  = "controller.resources.requests.memory"
+    value = "90Mi"
+  }
+
+  set {
+    name  = "controller.resources.limits.cpu"
+    value = "400m"
+  }
+
+  set {
+    name  = "controller.resources.limits.memory"
+    value = "90Mi"
+  }
+
+  set {
+    name  = "controller.service.type"
+    value = "ClusterIP"
   }
 
   set {
@@ -100,6 +234,11 @@ resource "helm_release" "ingress-nginx" {
   set {
     name  = "defaultBackend.nodeSelector.kubernetes\\.io/arch"
     value = "arm64"
+  }
+
+  set {
+    name  = "defaultBackend.enabled"
+    value = "true"
   }
 
   set {
