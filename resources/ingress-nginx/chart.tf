@@ -54,7 +54,7 @@ resource "helm_release" "ingress-nginx" {
 
   set {
     name  = "controller.resources.requests.memory"
-    value = "90Mi"
+    value = "256Mi"
   }
 
   set {
@@ -64,7 +64,7 @@ resource "helm_release" "ingress-nginx" {
 
   set {
     name  = "controller.resources.limits.memory"
-    value = "90Mi"
+    value = "256Mi"
   }
 
   set {
