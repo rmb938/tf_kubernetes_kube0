@@ -1,7 +1,7 @@
 resource "kubernetes_service_account" "prometheus-operator" {
   metadata {
     name      = "prometheus-operator"
-    namespace = module.prometheus-namespace.namespace_name
+    namespace = var.namespace
   }
 
   automount_service_account_token = true
@@ -24,13 +24,8 @@ resource "kubernetes_cluster_role_binding" "prometheus-operator" {
   subject {
     kind      = "ServiceAccount"
     name      = kubernetes_service_account.prometheus-operator.metadata[0].name
-    namespace = module.prometheus-namespace.namespace_name
+    namespace = var.namespace
   }
-
-  depends_on = [
-    kubernetes_service_account.prometheus-operator,
-    kubernetes_cluster_role.prometheus-operator
-  ]
 }
 
 resource "kubernetes_cluster_role" "prometheus-operator" {

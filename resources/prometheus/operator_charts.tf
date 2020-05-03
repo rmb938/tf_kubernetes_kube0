@@ -1,28 +1,28 @@
 resource "helm_release" "prometheus-operator-crd" {
   name      = "prometheus-operator-crd"
-  namespace = module.prometheus-namespace.namespace_name
+  namespace = var.namespace
 
   repository = data.helm_repository.personal.metadata[0].name
   chart      = "prometheus-operator-crd"
   version    = "0.1.1"
 
-  max_history = 10
+  max_history = 5
 
 }
 
 resource "helm_release" "prometheus-operator" {
   name      = "prometheus-operator"
-  namespace = module.prometheus-namespace.namespace_name
+  namespace = var.namespace
 
   repository = data.helm_repository.personal.metadata[0].name
   chart      = "prometheus-operator"
-  version    = "0.1.3"
+  version    = "0.1.11"
 
-  max_history = 10
+  max_history = 5
 
   depends_on = [
-    helm_release.prometheus-operator-crd,
-    kubernetes_cluster_role_binding.prometheus-operator
+    var.cert-manager,
+    helm_release.prometheus-operator-crd
   ]
 
   set {
@@ -57,7 +57,33 @@ resource "helm_release" "prometheus-operator" {
 
   set {
     name  = "nodeSelector.kubernetes\\.io/arch"
-    value = "arm"
+    value = "arm64"
   }
+
+  set {
+    name  = "kubeletService.namespace"
+    value = var.system-monitoring-namespace
+  }
+
+  # TODO: waiting for a prom operator release that has these flags
+  # set {
+  #   name  = "webhook.enabled"
+  #   value = "true"
+  # }
+
+  # set {
+  #   name  = "webhook.certificate.issuerRef.name"
+  #   value = "something"
+  # }
+
+  # set {
+  #   name  = "webhook.certificate.issuerRef.kind"
+  #   value = "something"
+  # }
+
+  # set {
+  #   name  = "webhook.certificate.issuerRef.group"
+  #   value = "something"
+  # }
 
 }

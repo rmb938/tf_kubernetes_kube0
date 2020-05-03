@@ -1,4 +1,0 @@
-
-module "prometheus" {
-  source = "./prometheus"
-}
