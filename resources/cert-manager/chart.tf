@@ -1,20 +1,15 @@
-data "helm_repository" "jetstack" {
-  name = "jetstack"
-  url  = "https://charts.jetstack.io"
-}
-
 resource "helm_release" "cert-manager" {
   name      = "cert-manager"
   namespace = var.namespace
 
-  repository = data.helm_repository.jetstack.metadata[0].name
+  repository = "https://charts.jetstack.io"
   chart      = "cert-manager"
-  version    = "v0.15.0-beta.0"
+  version    = "v1.0.3"
 
   max_history = 5
 
   depends_on = [
-    var.prometheus-crd
+    var.prometheus-operator
   ]
 
   set {

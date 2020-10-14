@@ -5,7 +5,3 @@ variable "namespace" {
 variable "system-monitoring-namespace" {
   type = string
 }
-
-variable "cert-manager" {
-
-}
