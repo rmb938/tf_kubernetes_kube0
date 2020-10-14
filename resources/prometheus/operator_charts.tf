@@ -24,11 +24,6 @@ resource "helm_release" "prometheus-operator" {
   }
 
   set {
-    name  = "serviceMonitor.enabled"
-    value = "true"
-  }
-
-  set {
     name  = "nodeSelector.kubernetes\\.io/arch"
     value = "arm64"
   }
