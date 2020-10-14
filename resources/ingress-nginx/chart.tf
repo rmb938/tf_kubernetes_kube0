@@ -1,17 +1,21 @@
+data "helm_repository" "ingress-nginx" {
+  name = "ingress-nginx"
+  url  = "https://kubernetes.github.io/ingress-nginx"
+}
+
 resource "helm_release" "ingress-nginx" {
   name      = "ingress-nginx"
   namespace = var.namespace
 
   repository = data.helm_repository.ingress-nginx.metadata[0].name
   chart      = "ingress-nginx"
-  version    = "2.0.3"
+  version    = "3.7.0"
 
   max_history = 5
 
   depends_on = [
     var.cert-manager,
     var.prometheus-operator,
-    kubernetes_network_policy.allow-any-ingress-nginx,
     kubernetes_network_policy.allow-any-ingress-nginx,
     kubernetes_network_policy.allow-nginx-ingress-to-defaultbackend,
     kubernetes_network_policy.allow-prometheus-ingress
@@ -48,26 +52,6 @@ resource "helm_release" "ingress-nginx" {
   }
 
   set {
-    name  = "controller.resources.requests.cpu"
-    value = "400m"
-  }
-
-  set {
-    name  = "controller.resources.requests.memory"
-    value = "256Mi"
-  }
-
-  set {
-    name  = "controller.resources.limits.cpu"
-    value = "400m"
-  }
-
-  set {
-    name  = "controller.resources.limits.memory"
-    value = "256Mi"
-  }
-
-  set {
     name  = "controller.service.type"
     value = "ClusterIP"
   }
@@ -92,9 +76,8 @@ resource "helm_release" "ingress-nginx" {
     value = "false"
   }
 
-  # TODO: this is currently false because we need cert-manager to provision the certs
-  # So we need to be able to set annotations
-  # and set the secret name and secret keys for the certs
+  # TODO: we need a way to get cert-maanger to create the certs
+  # how do?
   set {
     name  = "controller.admissionWebhooks.enabled"
     value = "false"

@@ -9,7 +9,7 @@ resource "helm_release" "cert-manager" {
 
   repository = data.helm_repository.jetstack.metadata[0].name
   chart      = "cert-manager"
-  version    = "v0.15.0-beta.0"
+  version    = "v1.0.3"
 
   max_history = 5
 
