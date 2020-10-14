@@ -2,7 +2,7 @@ resource "helm_release" "prometheus-operator-crd" {
   name      = "prometheus-operator-crd"
   namespace = var.namespace
 
-  repository = data.helm_repository.personal.metadata[0].name
+  repository = locals.personal_helm_repo
   chart      = "prometheus-operator-crd"
   version    = "0.1.1"
 
@@ -14,7 +14,7 @@ resource "helm_release" "prometheus-operator" {
   name      = "prometheus-operator"
   namespace = var.namespace
 
-  repository = data.helm_repository.personal.metadata[0].name
+  repository = locals.personal_helm_repo
   chart      = "prometheus-operator"
   version    = "0.1.11"
 

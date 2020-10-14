@@ -1,13 +1,8 @@
-data "helm_repository" "jetstack" {
-  name = "jetstack"
-  url  = "https://charts.jetstack.io"
-}
-
 resource "helm_release" "cert-manager" {
   name      = "cert-manager"
   namespace = var.namespace
 
-  repository = data.helm_repository.jetstack.metadata[0].name
+  repository = "https://charts.jetstack.io"
   chart      = "cert-manager"
   version    = "v1.0.3"
 

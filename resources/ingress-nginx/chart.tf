@@ -1,13 +1,8 @@
-data "helm_repository" "ingress-nginx" {
-  name = "ingress-nginx"
-  url  = "https://kubernetes.github.io/ingress-nginx"
-}
-
 resource "helm_release" "ingress-nginx" {
   name      = "ingress-nginx"
   namespace = var.namespace
 
-  repository = data.helm_repository.ingress-nginx.metadata[0].name
+  repository = "https://kubernetes.github.io/ingress-nginx"
   chart      = "ingress-nginx"
   version    = "3.7.0"
 
