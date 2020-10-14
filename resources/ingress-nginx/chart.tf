@@ -16,9 +16,10 @@ resource "helm_release" "ingress-nginx" {
     kubernetes_network_policy.allow-prometheus-ingress
   ]
 
-  set_string {
+  set {
     name  = "controller.config.use-proxy-protocol"
     value = "true"
+    type  = "string"
   }
 
   set {
