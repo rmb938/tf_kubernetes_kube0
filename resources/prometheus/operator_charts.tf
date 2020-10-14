@@ -1,29 +1,12 @@
-resource "helm_release" "prometheus-operator-crd" {
-  name      = "prometheus-operator-crd"
-  namespace = var.namespace
-
-  repository = locals.personal_helm_repo
-  chart      = "prometheus-operator-crd"
-  version    = "0.1.1"
-
-  max_history = 5
-
-}
-
 resource "helm_release" "prometheus-operator" {
   name      = "prometheus-operator"
   namespace = var.namespace
 
-  repository = locals.personal_helm_repo
+  repository = local.personal_helm_repo
   chart      = "prometheus-operator"
-  version    = "0.1.11"
+  version    = "0.2.0"
 
   max_history = 5
-
-  depends_on = [
-    var.cert-manager,
-    helm_release.prometheus-operator-crd
-  ]
 
   set {
     name  = "image.repository"
@@ -64,26 +47,5 @@ resource "helm_release" "prometheus-operator" {
     name  = "kubeletService.namespace"
     value = var.system-monitoring-namespace
   }
-
-  # TODO: waiting for a prom operator release that has these flags
-  # set {
-  #   name  = "webhook.enabled"
-  #   value = "true"
-  # }
-
-  # set {
-  #   name  = "webhook.certificate.issuerRef.name"
-  #   value = "something"
-  # }
-
-  # set {
-  #   name  = "webhook.certificate.issuerRef.kind"
-  #   value = "something"
-  # }
-
-  # set {
-  #   name  = "webhook.certificate.issuerRef.group"
-  #   value = "something"
-  # }
 
 }

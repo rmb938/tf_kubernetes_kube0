@@ -4,7 +4,7 @@ module "cert-manager-namespace" {
 }
 
 module "cert-manager" {
-  source         = "./cert-manager"
-  namespace      = module.cert-manager-namespace.namespace_name
-  prometheus-crd = module.prometheus.prometheus-operator-crd
+  source              = "./cert-manager"
+  namespace           = module.cert-manager-namespace.namespace_name
+  prometheus-operator = module.prometheus.prometheus-operator
 }

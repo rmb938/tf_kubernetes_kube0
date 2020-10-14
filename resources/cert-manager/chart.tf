@@ -9,7 +9,7 @@ resource "helm_release" "cert-manager" {
   max_history = 5
 
   depends_on = [
-    var.prometheus-crd
+    var.prometheus-operator
   ]
 
   set {
