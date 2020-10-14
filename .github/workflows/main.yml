@@ -45,7 +45,7 @@ jobs:
 
       - name: Terraform Apply
         run: |
-          terraforn apply tf.plan
+          terraform apply tf.plan
 
       - name: Stop VPN
         if: always()
