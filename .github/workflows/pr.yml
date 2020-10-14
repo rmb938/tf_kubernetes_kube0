@@ -12,7 +12,6 @@ jobs:
 
       - uses: GoogleCloudPlatform/github-actions/setup-gcloud@0.1.2
         with:
-          service_account_email: ${{ secrets.GCP_SA_EMAIL }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
