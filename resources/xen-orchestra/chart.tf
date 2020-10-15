@@ -4,7 +4,7 @@ resource "helm_release" "xen-orchestra" {
 
   repository = "http://charts.rmb938.com"
   chart      = "xen-orchestra"
-  version    = "0.1.1"
+  version    = "0.1.2"
 
   max_history = 5
 
@@ -19,8 +19,8 @@ resource "helm_release" "xen-orchestra" {
   }
 
   set {
-    name  = "ingress.hosts[0].host"
-    value = "orchestra.${var.namespace}.kube0.kubernetes.rmb938.me"
+    name  = "ingress.hosts"
+    value = "{orchestra.${var.namespace}.kube0.kubernetes.rmb938.me}"
   }
 
   set {
